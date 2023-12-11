@@ -83,11 +83,20 @@ class ClientController(IClientController):
         """
         with Session(self.engine) as session:
             try:
-                session.add(client)
-                session.commit()
-                session.refresh(client)
-                return client
-            except Exception:
+                existing_client = session.exec(
+                    select(ClientModel).where(ClientModel.id == id)).first()
+
+                if existing_client:
+                    for key, value in client.dict(exclude_unset=True).items():
+                        setattr(existing_client, key, value)
+
+                    session.commit()
+                    session.refresh(existing_client)
+                    return existing_client
+                else:
+                    return None
+            except Exception as e:
+                print(f"Erro ao atualizar: {e}")
                 return None
 
     def delete(self, id: int) -> bool:
