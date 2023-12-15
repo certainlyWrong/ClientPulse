@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "clientpulse"
+name = "ClientPulse"
 version = "0.1.0"
 description = ""
 authors = ["Adriano R. de Sousa <adrianorodriguesdsousa@ufpi.edu.br>"]
