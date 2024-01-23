@@ -16,6 +16,7 @@ async def find_all_clients():
 @client_router.get('/{client_id}/')
 async def find_client_by_uid(client_id: int):
     result = clientController.find_by_id(client_id)
+    print("result", result)
     return result or {"message": "Client not found"}
 
 
