@@ -17,11 +17,7 @@ try:
         echo=True,
     )
 
-    print("Connecting to database...")
-
     engine.connect()
-
-    print("Database connected")
 
     SQLModel.metadata.create_all(engine, checkfirst=True)
     clientController = ClientController(engine)
