@@ -2,35 +2,33 @@ from sqlalchemy import Engine, create_engine
 from sqlmodel import SQLModel
 
 from clientpulse.core.controllers.client_controller import ClientController
-import os
 
-DATABASE_URL = os.getenv('DATABASE_URL', 'localhost:3302')
-DATABASE_NAME = os.getenv('DATABASE_NAME', 'stockpulse')
-DATABASE_USER = os.getenv('DATABASE_USER', 'admin')
-DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD', '123456')
 
-database_url = (f"mysql+mysqlconnector://{DATABASE_USER}:{DATABASE_PASSWORD}"
-                f"@{DATABASE_URL}")
+from .enviroments import Enviroments
 
-print("database_url", database_url)
-
-print("DATABASE_HOST", DATABASE_URL)
-print("DATABASE_NAME", DATABASE_NAME)
-print("DATABASE_USER", DATABASE_USER)
-print("DATABASE_PASSWORD", DATABASE_PASSWORD)
 
 engine: Engine
 clientController: ClientController
 
 try:
     engine = create_engine(
-        f'{database_url}/{DATABASE_NAME}',
+        Enviroments.get_instance.database_connection,
         echo=True,
     )
 
-    engine.connect()
+    try:
+        engine.connect()
+    except Exception:
+        print("Database not found, creating database")
+
+        engine = create_engine(
+            Enviroments.get_instance.database_connection,
+            echo=True,
+        )
+
     SQLModel.metadata.create_all(engine, checkfirst=True)
     clientController = ClientController(engine)
-except Exception:
+except Exception as e:
     print("Error connecting to database")
+    print(e)
     exit()
