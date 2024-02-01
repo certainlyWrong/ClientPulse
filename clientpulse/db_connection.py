@@ -16,15 +16,7 @@ try:
         echo=True,
     )
 
-    try:
-        engine.connect()
-    except Exception:
-        print("Database not found, creating database")
-
-        engine = create_engine(
-            Enviroments.get_instance.database_connection,
-            echo=True,
-        )
+    engine.connect()
 
     SQLModel.metadata.create_all(engine, checkfirst=True)
     clientController = ClientController(engine)
