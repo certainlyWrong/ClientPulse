@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 
 
-class Enviroments:
+class Environment:
 
     instance = None
 
@@ -11,9 +11,9 @@ class Enviroments:
 
         self.MODE = os.getenv('MODE', 'production')
         self.DATABASE_URL = (
-            'localhost:3302'
+            'clientpulse_db:3306'
             if self.MODE == 'development' else os.getenv(
-                'DATABASE_URL', 'localhost:3302'
+                'DATABASE_URL', 'clientpulse_db:3306'
             )
         )
         self.DATABASE_NAME = (
@@ -59,8 +59,8 @@ class Enviroments:
 
     @classmethod
     @property
-    def get_instance(cls) -> 'Enviroments':
+    def get_instance(cls) -> 'Environment':
         if cls.instance is None:
-            cls.instance = Enviroments()
+            cls.instance = Environment()
         print(cls.instance)
         return cls.instance
